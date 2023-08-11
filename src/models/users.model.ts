@@ -1,9 +1,13 @@
 import { User } from '@/interfaces/users.interface';
-import db from '@/db';
+import { query } from '@/utils/promise.db';
 
 class UserModel {
-  async getAllUsers() {
-    return db.query('SELECT * FROM users');
+  async findUserByName(name: string): Promise<User | null> {
+    const result = await query('SELECT * FROM users WHERE name = ?', [name]);
+    if (!result) {
+      return null;
+    }
+    return result as User;
   }
 }
 

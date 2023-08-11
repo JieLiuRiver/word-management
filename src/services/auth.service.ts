@@ -3,33 +3,28 @@ import { SECRET_KEY } from '@/config';
 import { HttpException } from '@/exceptions/httpException';
 import { DataStoredInToken, TokenData } from '@/interfaces/auth.interface';
 import { User } from '@/interfaces/users.interface';
-import { UserModel } from '@/models/users.model';
+import UserModel from '@/models/users.model';
 
 const createToken = (user: User): TokenData => {
-  const dataStoredInToken: DataStoredInToken = { id: user.id };
-  const expiresIn: number = 60 * 60;
-
-  return { expiresIn, token: sign(dataStoredInToken, SECRET_KEY, { expiresIn }) };
+  const dataStoredInToken: DataStoredInToken = { name: user.name };
+  const expiresIn = '1d';
+  return {
+    token: sign(dataStoredInToken, SECRET_KEY, { expiresIn }),
+  };
 };
 
-const createCookie = (tokenData: TokenData): string => {
-  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
-};
-
-// @Service()
 export class AuthService {
-  public async login(userData: User): Promise<{ cookie: string; findUser: User }> {
-    const findUser: User = UserModel.find(user => user.name === userData.name);
-    if (!findUser) throw new HttpException(409, `This name ${userData.name} was not found`);
+  private userModel = new UserModel();
 
-    const tokenData = createToken(findUser);
-    const cookie = createCookie(tokenData);
-
-    return { cookie, findUser };
+  public async login(username: string): Promise<{ user: User; token: string }> {
+    const findUser: User = await this.userModel.findUserByName(username);
+    if (!findUser) throw new HttpException(409, `This username ${username} was not found`);
+    const { token } = createToken(findUser);
+    return { user: findUser, token };
   }
 
   public async logout(userData: User): Promise<User> {
-    const findUser: User = UserModel.find(user => user.name === userData.name);
+    const findUser: User = this.userModel.find(user => user.name === userData.name);
     if (!findUser) throw new HttpException(409, "User doesn't exist");
 
     return findUser;

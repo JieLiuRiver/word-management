@@ -3,25 +3,22 @@ import { verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '@/config';
 import { HttpException } from '@/exceptions/httpException';
 import { DataStoredInToken, RequestWithUser } from '@/interfaces/auth.interface';
-import { UserModel } from '@/models/users.model';
+import UserModel from '@/models/users.model';
 
 const getAuthorization = req => {
-  const coockie = req.cookies['Authorization'];
-  if (coockie) return coockie;
-
   const header = req.header('Authorization');
   if (header) return header.split('Bearer ')[1];
-
   return null;
 };
+const userModel = new UserModel();
 
 export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const Authorization = getAuthorization(req);
+    const token = getAuthorization(req);
 
-    if (Authorization) {
-      const { id } = (await verify(Authorization, SECRET_KEY)) as DataStoredInToken;
-      const findUser = UserModel.find(user => user.id === id);
+    if (token) {
+      const { name } = (await verify(token, SECRET_KEY)) as DataStoredInToken;
+      const findUser = await userModel.findUserByName(name);
 
       if (findUser) {
         req.user = findUser;
