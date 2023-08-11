@@ -4,7 +4,8 @@ export enum EUserType {
 }
 
 export interface User {
-  id?: number;
-  name?: string;
-  type?: EUserType;
+  id: number;
+  name: string;
+  type: EUserType;
+  personalKey: string;
 }

@@ -1,28 +1,32 @@
 import { NextFunction, Request, Response } from 'express';
-import { RequestWithUser } from '@/interfaces/auth.interface';
 import { User } from '@/interfaces/users.interface';
-import { AuthService } from '@/services/auth.service';
+import UserModel from '@/models/users.model';
+import { HttpException } from '@/exceptions/httpException';
+import jwtService from '@/services/jwt.service';
+import { RequestWithUser } from '@/interfaces/auth.interface';
 
 export class AuthController {
-  public auth = new AuthService();
+  private userModel = new UserModel();
 
   public logIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { username } = req.body;
-      const result = await this.auth.login(username);
-      res.status(200).json({ result, message: 'logined successfully' });
+      const foundUser: User = await this.userModel.findUserByName(username);
+      if (!foundUser) throw new HttpException(409, `This username ${username} was not found`);
+      const token = jwtService.sign({ id: foundUser.id, name: foundUser.name }, foundUser.personalKey);
+      res
+        .status(200)
+        .json({ data: { token, userInfo: { id: foundUser.id, name: foundUser.name, type: foundUser.type } }, message: 'logined successfully' });
     } catch (error) {
       next(error);
     }
   };
 
-  public logOut = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  public revokeToken = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.user;
-      const logOutUserData: User = await this.auth.logout(userData);
-
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutUserData, message: 'logout successfully' });
+      const { username } = req.body;
+      await this.userModel.updateUserPersonalkey(username);
+      res.status(200).json({ data: {} });
     } catch (error) {
       next(error);
     }

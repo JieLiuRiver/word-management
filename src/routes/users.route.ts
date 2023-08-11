@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { UserController } from '@/controllers/users.controller';
 import { Routes } from '@/interfaces/routes.interface';
+import { AuthMiddleware } from '@/middlewares/auth.middleware';
 // import { ValidationMiddleware } from '@/middlewares/validation.middleware';
 
 export class UserRoute implements Routes {
@@ -13,6 +14,6 @@ export class UserRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, this.user.getUsers);
+    this.router.get(`${this.path}`, AuthMiddleware, this.user.getUsers);
   }
 }

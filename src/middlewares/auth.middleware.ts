@@ -1,9 +1,8 @@
 import { NextFunction, Response } from 'express';
-import { verify } from 'jsonwebtoken';
-import { SECRET_KEY } from '@/config';
 import { HttpException } from '@/exceptions/httpException';
-import { DataStoredInToken, RequestWithUser } from '@/interfaces/auth.interface';
+import { RequestWithUser } from '@/interfaces/auth.interface';
 import UserModel from '@/models/users.model';
+import jwtService from '@/services/jwt.service';
 
 const getAuthorization = req => {
   const header = req.header('Authorization');
@@ -17,11 +16,12 @@ export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: 
     const token = getAuthorization(req);
 
     if (token) {
-      const { name } = (await verify(token, SECRET_KEY)) as DataStoredInToken;
-      const findUser = await userModel.findUserByName(name);
+      const payload = jwtService.decodePayload(token);
+      const currentUser = await userModel.findUserByName(payload.name);
+      jwtService.verify(token, currentUser.personalKey);
 
-      if (findUser) {
-        req.user = findUser;
+      if (currentUser) {
+        req.user = currentUser;
         next();
       } else {
         next(new HttpException(401, 'Wrong authentication token'));
