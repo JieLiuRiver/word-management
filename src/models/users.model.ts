@@ -1,6 +1,10 @@
 import { User } from '@/interfaces/users.interface';
+import db from '@/db';
 
-export const UserModel: User[] = [
-  { id: 1, name: 'Tom' },
-  { id: 2, name: 'Mary' },
-];
+class UserModel {
+  async getAllUsers() {
+    return db.query('SELECT * FROM users');
+  }
+}
+
+export default UserModel;
