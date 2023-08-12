@@ -1,10 +1,13 @@
 import { HttpException } from '@/exceptions/httpException';
 import Joi from 'joi';
 import { NextFunction, Response, Request } from 'express';
+import { withErrorMessagePrefix } from '@/utils';
 
-const usernameSchema = Joi.string().required().messages({
-  'any.required': 'username is required',
-});
+const usernameSchema = Joi.string()
+  .required()
+  .messages({
+    'any.required': withErrorMessagePrefix('the username is required'),
+  });
 
 export function validateUsername(req: Request, res: Response, next: NextFunction) {
   const { error } = usernameSchema.validate(req.body.username);

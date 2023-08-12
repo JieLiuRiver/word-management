@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request } from 'express';
 import { Card } from '@/interfaces/cards.interface';
 import CardsModel from '@/models/cards.model';
 import { HttpException } from '@/exceptions/httpException';
