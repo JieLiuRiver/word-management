@@ -14,7 +14,10 @@ export class AuthRoute implements Routes {
   }
 
   private initializeRoutes() {
+    // login api
     this.router.post('/login', validateUsername, this.auth.logIn);
+
+    // revoke uses's token
     this.router.post('/revoke-token', AuthMiddleware, AdminApiGuardMiddleware, this.auth.revokeToken);
   }
 }

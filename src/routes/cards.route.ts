@@ -26,6 +26,7 @@ export class CardsRoute implements Routes {
       AdminApiGuardMiddleware,
       validateBodyWordFeild,
       wordInputValidationMiddleware,
+      // use queue middleware to handle highly concurrent writes
       queueMiddleware(this.cards.createCard.bind(this.cards)),
     );
 
@@ -43,6 +44,7 @@ export class CardsRoute implements Routes {
       validateParamsIdFeild,
       validateBodyWordFeild,
       wordInputValidationMiddleware,
+      // use queue middleware to handle highly concurrent writes
       queueMiddleware(this.cards.updateCard.bind(this.cards)),
     );
 

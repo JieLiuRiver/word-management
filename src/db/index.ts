@@ -14,6 +14,7 @@ const connectDb = () => {
 
 const createTables = (db: Database) => {
   db.serialize(() => {
+    // create user table
     db.run(
       `CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,6 +25,8 @@ const createTables = (db: Database) => {
         type INTEGER -- 0 represent 'user', 1 represent 'admin'
       )`,
     );
+
+    // create cards table
     db.run(
       `CREATE TABLE IF NOT EXISTS cards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

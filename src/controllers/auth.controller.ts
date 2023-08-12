@@ -10,6 +10,7 @@ import type { ApiResponse } from '@/interfaces/api.interface';
 export class AuthController {
   private userModel = new UserModel();
 
+  // users login
   public logIn = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
       const { username } = req.body;
@@ -22,6 +23,7 @@ export class AuthController {
     }
   };
 
+  // revoke token, only admin can use
   public revokeToken = async (req: RequestWithUser, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
       const { username } = req.body;
