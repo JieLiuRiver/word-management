@@ -45,4 +45,8 @@ db.on('error', error => {
   console.error('Database error:', error);
 });
 
+export const disconnectDB = () => {
+  db.close();
+};
+
 export default db;

@@ -13,6 +13,7 @@ export class AuthController {
   // users login
   public logIn = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
+      console.log('bbbbbbbbbbbb');
       const { username } = req.body;
       const foundUser: User = await this.userModel.findUserByName(username);
       if (!foundUser) throw new HttpException(409, withErrorMessagePrefix(`this username ${username} was not found`));

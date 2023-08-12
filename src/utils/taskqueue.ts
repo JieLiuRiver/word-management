@@ -9,7 +9,7 @@ export default class TaskQueue {
   constructor() {
     this.queue = [];
     this.isProcessing = false;
-    this.retryDelay = 2000;
+    this.retryDelay = 500;
     this.maxRetryCount = 2;
   }
 
