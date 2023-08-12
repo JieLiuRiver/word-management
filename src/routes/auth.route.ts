@@ -4,7 +4,6 @@ import { Routes } from '@/interfaces/routes.interface';
 import { AuthMiddleware } from '@/middlewares/auth.middleware';
 import { validateUsername } from '@/middlewares/user-validator.middleware';
 import { AdminApiGuardMiddleware } from '@/middlewares/admin.middleware';
-// import { ValidationMiddleware } from '@/middlewares/validation.middleware';
 
 export class AuthRoute implements Routes {
   public router = Router();

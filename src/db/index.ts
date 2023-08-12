@@ -15,8 +15,18 @@ db.serialize(() => {
     `CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name VARCHAR(50) UNIQUE,
-      personalKey TEXT,
+      createTime DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updateTime DATETIME DEFAULT CURRENT_TIMESTAMP,
+      personalKey TEXT UNIQUE,
       type INTEGER -- 0 represent 'user', 1 represent 'admin'
+    )`,
+  );
+  db.run(
+    `CREATE TABLE IF NOT EXISTS cards (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      word TEXT,
+      createTime DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updateTime DATETIME DEFAULT CURRENT_TIMESTAMP
     )`,
   );
 });
