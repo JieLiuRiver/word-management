@@ -68,3 +68,30 @@ If a client exceeds the request limit, a 429 Too Many Requests response is retur
     })
   );
   ```
+
+### Security and Input Validation
+
+#### Input Validation
+Input validation is implemented using a middleware to protect the input value of word. It filters out special characters and prevents SQL injection.
+
+#### Security
+For security purposes, a custom `cors` middleware is implemented to configure the secure origin using environment variables.
+  ```ts
+  this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
+  ```
+
+A security headers middleware, `securityHeadersMiddleware`, is also written to enhance security measures.
+  ```ts
+  export default function securityHeadersMiddleware(req, res, next) {
+    // Set the XSS guard header
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+
+    // Disable content sniffing
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+
+    // Remove leaky information
+    res.removeHeader('X-Powered-By');
+
+    next();
+  }
+  ```
