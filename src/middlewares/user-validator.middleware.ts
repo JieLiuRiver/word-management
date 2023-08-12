@@ -10,7 +10,6 @@ const usernameSchema = Joi.string()
   });
 
 export function validateUsername(req: Request, res: Response, next: NextFunction) {
-  console.log('-------- aaa', req.body);
   const { error } = usernameSchema.validate(req.body.username);
 
   if (error) {
