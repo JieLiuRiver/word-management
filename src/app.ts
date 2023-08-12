@@ -44,7 +44,7 @@ export class App {
     this.app.use(apiResponseMiddleware);
     this.app.use(
       createRateLimitMiddleware({
-        max: 50,
+        max: 60,
         windowMs: 60 * 1000,
       }),
     );
