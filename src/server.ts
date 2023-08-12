@@ -2,13 +2,12 @@ import db from '@/db';
 import '@/db/seed';
 import { App } from '@/app';
 import { AuthRoute } from '@/routes/auth.route';
-import { UserRoute } from '@/routes/users.route';
 import { CardsRoute } from '@/routes/cards.route';
 
 let shuttingDown = false,
   errCode = 0;
 
-const app = new App([new UserRoute(), new AuthRoute(), new CardsRoute()]);
+const app = new App([new AuthRoute(), new CardsRoute()]);
 
 const server = app.listen();
 

@@ -6,7 +6,7 @@ import { withErrorMessagePrefix } from '@/utils';
 const usernameSchema = Joi.string()
   .required()
   .messages({
-    'any.required': withErrorMessagePrefix('the username is required'),
+    'any.required': withErrorMessagePrefix('username is required'),
   });
 
 export function validateUsername(req: Request, res: Response, next: NextFunction) {

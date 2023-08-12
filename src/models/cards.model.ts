@@ -32,12 +32,40 @@ class CardsModel {
     return result as Card;
   }
 
-  async fetchCards(): Promise<Card[] | null> {
-    const result = await all('SELECT * FROM cards');
+  async fetchCards(
+    pageNumber = 1,
+    pageSize = 10,
+  ): Promise<{
+    rows: Card[];
+    meta: {
+      total: number;
+      pageNumber: number;
+      pageSize: number;
+    };
+  } | null> {
+    const offset = (pageNumber - 1) * pageSize;
+    const result = await all(`
+      SELECT * FROM cards
+      ORDER BY updateTime DESC
+      LIMIT ${pageSize}
+      OFFSET ${offset}
+    `);
+
+    const countResponse = await query(`
+      SELECT COUNT(*) AS count FROM cards
+    `);
     if (!result) {
       return null;
     }
-    return result as Card[];
+
+    return {
+      rows: result as Card[],
+      meta: {
+        total: (countResponse as { count: number }).count,
+        pageNumber,
+        pageSize,
+      },
+    };
   }
 
   async getCardById(id: number): Promise<Card | null> {

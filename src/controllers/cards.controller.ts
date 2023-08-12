@@ -24,22 +24,10 @@ export class CardsController {
       const { word } = req.body;
       const card: Card = await this.cardsModel.getCardById(Number(id));
       if (!card) {
-        throw new HttpException(409, withErrorMessagePrefix(`the card ${id} is not found`));
+        throw new HttpException(409, withErrorMessagePrefix(`card ${id} is not found`));
       }
       await this.cardsModel.updateCard(Number(id), { word });
       res.apiSuccess(null);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public getCards = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
-    try {
-      const cards: Card[] = await this.cardsModel.fetchCards();
-      if (!Array.isArray(cards)) {
-        throw new HttpException(409, withErrorMessagePrefix(`something wrong with this api`));
-      }
-      res.apiSuccess(cards || []);
     } catch (error) {
       next(error);
     }
@@ -50,10 +38,20 @@ export class CardsController {
       const { id } = req.params;
       const card: Card = await this.cardsModel.getCardById(Number(id));
       if (!card) {
-        throw new HttpException(409, withErrorMessagePrefix(`the card ${id} is not found`));
+        throw new HttpException(409, withErrorMessagePrefix(`card ${id} is not found`));
       }
       await this.cardsModel.deleteCard(Number(id));
       res.apiSuccess(null);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getCards = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
+    try {
+      const { pageNumber = 1, pageSize = 10 } = req.query;
+      const carsData = await this.cardsModel.fetchCards(Number(pageNumber), Number(pageSize));
+      res.apiSuccess(carsData);
     } catch (error) {
       next(error);
     }
@@ -64,7 +62,7 @@ export class CardsController {
       const { id } = req.params;
       const card: Card = await this.cardsModel.getCardById(Number(id));
       if (!card) {
-        throw new HttpException(409, withErrorMessagePrefix(`the card ${id} is not found`));
+        throw new HttpException(409, withErrorMessagePrefix(`card ${id} is not found`));
       }
       res.apiSuccess(card);
     } catch (error) {
