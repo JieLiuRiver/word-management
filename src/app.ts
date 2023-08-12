@@ -1,5 +1,6 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import http from 'http';
 import express from 'express';
 import { NODE_ENV, PORT, ORIGIN, CREDENTIALS } from '@/config';
 import { Routes } from '@/interfaces/routes.interface';
@@ -9,6 +10,7 @@ import apiResponseMiddleware from '@/middlewares/api.response.middleware';
 export class App {
   public app: express.Application;
   public env: string;
+  public server: http.Server;
   public port: string | number;
 
   constructor(routes: Routes[]) {
@@ -22,12 +24,13 @@ export class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    this.server = this.app.listen(this.port, () => {
       console.log(`=================================`);
       console.log(`======= ENV: ${this.env} =======`);
       console.log(`🚀 App listening on the port ${this.port}`);
       console.log(`=================================`);
     });
+    return this.server;
   }
 
   public getServer() {

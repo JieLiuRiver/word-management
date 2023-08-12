@@ -3,4 +3,5 @@ export interface Card {
   word: string;
   createTime: string;
   updateTime: string;
+  no: string;
 }
