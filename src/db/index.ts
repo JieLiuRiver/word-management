@@ -1,7 +1,7 @@
 import { verbose } from 'sqlite3';
 
 const sqlite3 = verbose();
-const SQLITE_STORE_PATH = './src/db/db.sqlite';
+const SQLITE_STORE_PATH = './db.sqlite';
 
 const db = new sqlite3.Database(SQLITE_STORE_PATH, (err: Error) => {
   if (err) {
