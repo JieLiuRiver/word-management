@@ -11,17 +11,19 @@ class CardsModel {
   }
 
   async updateCard(id: number, info: { word: string }): Promise<Card | null> {
-    const result = await run(
-      `
-    UPDATE cards
-    SET word = ? WHERE id = ?
-  `,
-      [info.word, id],
-    );
-    if (!result) {
-      return null;
+    try {
+      await run('BEGIN');
+      await run(
+        `UPDATE cards
+         SET word = ? WHERE id = ?`,
+        [info.word, id],
+      );
+      const newCard = await this.getCardById(id);
+      await run('COMMIT');
+      return newCard as Card;
+    } catch (error) {
+      await run('ROLLBACK');
     }
-    return result as Card;
   }
 
   async deleteCard(id: number): Promise<Card | null> {
