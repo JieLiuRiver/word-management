@@ -14,9 +14,7 @@ export class AuthController {
       const foundUser: User = await this.userModel.findUserByName(username);
       if (!foundUser) throw new HttpException(409, `This username ${username} was not found`);
       const token = jwtService.sign({ id: foundUser.id, name: foundUser.name }, foundUser.personalKey);
-      res
-        .status(200)
-        .json({ data: { token, userInfo: { id: foundUser.id, name: foundUser.name, type: foundUser.type } }, message: 'logined successfully' });
+      res.status(200).json({ data: { token, userInfo: { id: foundUser.id, name: foundUser.name, type: foundUser.type } }, code: 0 });
     } catch (error) {
       next(error);
     }
@@ -26,7 +24,7 @@ export class AuthController {
     try {
       const { username } = req.body;
       await this.userModel.updateUserPersonalkey(username);
-      res.status(200).json({ data: {} });
+      res.status(200).json({ data: null, code: 0 });
     } catch (error) {
       next(error);
     }

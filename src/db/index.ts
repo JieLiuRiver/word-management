@@ -31,4 +31,8 @@ db.serialize(() => {
   );
 });
 
+db.on('error', error => {
+  console.error('Database error:', error);
+});
+
 export default db;
