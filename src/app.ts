@@ -1,12 +1,13 @@
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
 import http from 'http';
 import express from 'express';
+import compression from 'compression';
 import { NODE_ENV, PORT, ORIGIN, CREDENTIALS } from '@/config';
 import { Routes } from '@/interfaces/routes.interface';
 import { ErrorMiddleware } from '@/middlewares/error.middleware';
 import apiResponseMiddleware from '@/middlewares/api.response.middleware';
 import { createRateLimitMiddleware } from './middlewares/ratelimit.middleware';
+import cors from '@/middlewares/cors.middleware';
+import securityHeadersMiddleware from '@/middlewares/security-headers.middleware';
 
 export class App {
   public app: express.Application;
@@ -41,6 +42,8 @@ export class App {
   private initializeMiddlewares() {
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     this.app.use(express.json());
+    this.app.use(securityHeadersMiddleware);
+    this.app.use(compression());
     this.app.use(apiResponseMiddleware);
     this.app.use(
       createRateLimitMiddleware({
@@ -49,7 +52,6 @@ export class App {
       }),
     );
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(cookieParser());
   }
 
   private initializeRoutes(routes: Routes[]) {
