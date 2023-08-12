@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request } from 'express';
 import { User } from '@/interfaces/users.interface';
 import UserModel from '@/models/users.model';
 import { HttpException } from '@/exceptions/httpException';

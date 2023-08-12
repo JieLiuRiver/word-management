@@ -5,6 +5,7 @@ import { AuthMiddleware } from '@/middlewares/auth.middleware';
 import { AdminApiGuardMiddleware } from '@/middlewares/admin.middleware';
 import { validateBodyWordFeild, validatePageParams, validateParamsIdFeild } from '@/middlewares/cards-validator.middleware';
 import createInputValidationMiddleware from '@/middlewares/input-validator.middlware';
+import { queueMiddleware } from '@/middlewares/queue.middleware';
 
 const wordInputValidationMiddleware = createInputValidationMiddleware('word');
 
@@ -19,11 +20,21 @@ export class CardsRoute implements Routes {
 
   private initializeRoutes() {
     // create
-    this.router.post(this.path, AuthMiddleware, AdminApiGuardMiddleware, validateBodyWordFeild, wordInputValidationMiddleware, this.cards.createCard);
+    this.router.post(
+      this.path,
+      AuthMiddleware,
+      AdminApiGuardMiddleware,
+      validateBodyWordFeild,
+      wordInputValidationMiddleware,
+      queueMiddleware(this.cards.createCard.bind(this.cards)),
+    );
+
     // get cards
     this.router.get(this.path, AuthMiddleware, validatePageParams, this.cards.getCards);
+
     // get card by id
     this.router.get(`${this.path}/:id`, AuthMiddleware, validateParamsIdFeild, this.cards.getCardById);
+
     // update card
     this.router.put(
       `${this.path}/:id`,
@@ -32,9 +43,10 @@ export class CardsRoute implements Routes {
       validateParamsIdFeild,
       validateBodyWordFeild,
       wordInputValidationMiddleware,
-      this.cards.updateCard,
+      queueMiddleware(this.cards.updateCard.bind(this.cards)),
     );
+
     // delete card
-    this.router.delete(`${this.path}/:id`, AuthMiddleware, validateParamsIdFeild, this.cards.deleteCard);
+    this.router.delete(`${this.path}/:id`, AuthMiddleware, validateParamsIdFeild, queueMiddleware(this.cards.deleteCard.bind(this.cards)));
   }
 }
