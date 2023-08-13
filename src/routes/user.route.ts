@@ -19,6 +19,6 @@ export class UserRoute implements Routes {
     this.router.get(this.path, authMiddleware, adminApiGuardMiddleware, this.users.getUsers);
 
     // get user by id
-    this.router.get(`${this.path}/:id`, authMiddleware, adminApiGuardMiddleware, validateParamsIdFeild, this.users.getUserById);
+    this.router.get(`${this.path}/:id`, authMiddleware, validateParamsIdFeild, this.users.getUserById);
   }
 }

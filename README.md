@@ -43,20 +43,19 @@ When starting the app, the users table inserts 2 users by default
 - User `Mary`, normal user
 
 ### API
-All apis are prefixed with `/api/v1`. For example, you want to test login api, it's `/api/v1/login`.
+All API are prefixed with `/api/v1`， for example, you want to test login api, it's `/api/v1/login`.
 
-all endpoints except `/login` require an authentication `token`
-
-- `POST /login` - User login, only requires body.username, no need password at this time.
-- `GET /users` - Get users, only admin have this permission
-- `GET /users/:id` - Get users, only admin have this permission
-- `POST /revoke-token` - Revoke JWT for a user, requires admin privileges, required body.userid
-- `POST /cards` - Create a new word card, requires body.- `POST /cards` - Create a new word card, requires body.user_input
-- `GET /cards` - Get paginated word card, defaults to pageNumber: 1, pageSize: 10
-- `GET /cards/:id` - Get card by ID
-- `PUT /cards/:id` - Update card by ID, requires params.id and body.user_input
-- `DELETE /cards/:id` - Delete card by ID
-
+| API | METHOD | Authorization | PARAMS/BODY | PERMISSION | DESCRIPTION
+| :----- | :------ | :----- | :----- |:----- |:----- |
+| `/login` | `POST`   | `false` | `{"uername": "Mary"}` | `user`、`admin` | User login
+| `/users` | `GET`   | `true` | `-` | `admin` | Get all users
+| `/user/:id` | `GET`   | `true` | `-` | `admin`、`user` | Get user by id
+| `/revoke-token` | `POST`   | `true` | `{"userid": 1}` | `admin` | Revoke user's token
+| `/cards` | `POST`   | `true` | `{"user_input": "test"}` | `admin`、 `user` | Create word card
+| `/cards` | `GET`   | `true` | `pageNumber=1&pageSize=10` | `admin`、 `user` | Get cards with pagination
+| `/cards/:id` | `GET`   | `true` | `-` | `admin`、 `user` | Get card by id
+| `/cards/:id` | `PUT`   | `true` | `{"user_input": "modify01"}` | `admin`、 `user` | Modify card
+| `/cards/:id` | `DELETE`   | `true` | `-` | `admin`、 `user` | Delete card
 
 ### Handling High Load and Concurrency
 This app implements several strategies to handle high traffic and potential race conditions when updating data:
