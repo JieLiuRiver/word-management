@@ -13,7 +13,7 @@ const getAuthorization = req => {
 const userModel = new UserModel();
 
 // The middleware is verifing token, if validated, the user object is added to the req object
-export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+export const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
     const token = getAuthorization(req);
 

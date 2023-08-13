@@ -4,7 +4,7 @@ import UserModel from '@/models/users.model';
 import { HttpException } from '@/exceptions/httpException';
 import jwtService from '@/services/jwt.service';
 import { RequestWithUser } from '@/interfaces/auth.interface';
-import { withErrorMessagePrefix } from '@/utils';
+import { omit, withErrorMessagePrefix } from '@/utils';
 import type { ApiResponse } from '@/interfaces/api.interface';
 
 export class AuthController {
@@ -17,7 +17,7 @@ export class AuthController {
       const foundUser: User = await this.userModel.findUserByName(username);
       if (!foundUser) throw new HttpException(409, withErrorMessagePrefix(`this username ${username} was not found`));
       const token = jwtService.sign({ id: foundUser.id, name: foundUser.name }, foundUser.personalKey);
-      res.apiSuccess({ token, userInfo: { id: foundUser.id, name: foundUser.name, type: foundUser.type } });
+      res.apiSuccess({ token, userInfo: omit<User>(foundUser, ['personalKey']) });
     } catch (error) {
       next(error);
     }

@@ -1,7 +1,7 @@
 import { EUserType } from '@/interfaces/users.interface';
-import { AdminApiGuardMiddleware } from '@/middlewares/admin.middleware';
+import { adminApiGuardMiddleware } from '@/middlewares/admin.middleware';
 
-describe('AdminApiGuardMiddleware', () => {
+describe('adminApiGuardMiddleware', () => {
   let mockReq;
   let mockRes;
   let mockNext;
@@ -15,7 +15,7 @@ describe('AdminApiGuardMiddleware', () => {
   it('should call next if user is admin', () => {
     mockReq.user = { type: EUserType.ADMIN };
 
-    AdminApiGuardMiddleware(mockReq, mockRes, mockNext);
+    adminApiGuardMiddleware(mockReq, mockRes, mockNext);
 
     expect(mockNext).toBeCalled();
   });
@@ -23,13 +23,13 @@ describe('AdminApiGuardMiddleware', () => {
   it('should throw error if user is not admin', () => {
     mockReq.user = { type: EUserType.USER };
 
-    AdminApiGuardMiddleware(mockReq, mockRes, mockNext);
+    adminApiGuardMiddleware(mockReq, mockRes, mockNext);
 
     expect(mockNext).toBeCalledWith(expect.any(Error));
   });
 
   it('should throw error if user is undefined', () => {
-    AdminApiGuardMiddleware(mockReq, mockRes, mockNext);
+    adminApiGuardMiddleware(mockReq, mockRes, mockNext);
 
     expect(mockNext).toBeCalledWith(expect.any(Error));
   });

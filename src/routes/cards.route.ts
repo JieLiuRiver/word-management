@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { CardsController } from '@/controllers/cards.controller';
 import { Routes } from '@/interfaces/routes.interface';
-import { AuthMiddleware } from '@/middlewares/auth.middleware';
-import { AdminApiGuardMiddleware } from '@/middlewares/admin.middleware';
+import { authMiddleware } from '@/middlewares/auth.middleware';
+import { adminApiGuardMiddleware } from '@/middlewares/admin.middleware';
 import { validateBodyWordFeild, validatePageParams, validateParamsIdFeild } from '@/middlewares/cards-validator.middleware';
 import createInputValidationMiddleware from '@/middlewares/input-validator.middlware';
 import { queueMiddleware } from '@/middlewares/queue.middleware';
@@ -22,8 +22,8 @@ export class CardsRoute implements Routes {
     // create
     this.router.post(
       this.path,
-      AuthMiddleware,
-      AdminApiGuardMiddleware,
+      authMiddleware,
+      adminApiGuardMiddleware,
       validateBodyWordFeild,
       userInputValidationMiddleware,
       // use queue middleware to handle highly concurrent writes
@@ -31,16 +31,16 @@ export class CardsRoute implements Routes {
     );
 
     // get cards
-    this.router.get(this.path, AuthMiddleware, validatePageParams, this.cards.getCards);
+    this.router.get(this.path, authMiddleware, validatePageParams, this.cards.getCards);
 
     // get card by id
-    this.router.get(`${this.path}/:id`, AuthMiddleware, validateParamsIdFeild, this.cards.getCardById);
+    this.router.get(`${this.path}/:id`, authMiddleware, validateParamsIdFeild, this.cards.getCardById);
 
     // update card
     this.router.put(
       `${this.path}/:id`,
-      AuthMiddleware,
-      AdminApiGuardMiddleware,
+      authMiddleware,
+      adminApiGuardMiddleware,
       validateParamsIdFeild,
       validateBodyWordFeild,
       userInputValidationMiddleware,
@@ -49,6 +49,6 @@ export class CardsRoute implements Routes {
     );
 
     // delete card
-    this.router.delete(`${this.path}/:id`, AuthMiddleware, validateParamsIdFeild, queueMiddleware(this.cards.deleteCard.bind(this.cards)));
+    this.router.delete(`${this.path}/:id`, authMiddleware, validateParamsIdFeild, queueMiddleware(this.cards.deleteCard.bind(this.cards)));
   }
 }

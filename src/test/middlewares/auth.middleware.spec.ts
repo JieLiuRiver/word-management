@@ -1,4 +1,4 @@
-import { AuthMiddleware } from '@/middlewares/auth.middleware';
+import { authMiddleware } from '@/middlewares/auth.middleware';
 import jwtService from '@/services/jwt.service';
 import UserModel from '@/models/users.model';
 
@@ -15,7 +15,7 @@ jest.mock('@/models/users.model', () => {
   return Model;
 });
 
-describe('AuthMiddleware', () => {
+describe('authMiddleware', () => {
   let mockReq;
   let mockRes;
   let mockNext;
@@ -34,7 +34,7 @@ describe('AuthMiddleware', () => {
     jwtService.decodePayload = jest.fn(() => ({ id: 1, name: 'test' }));
     jwtService.verify = jest.fn();
 
-    await AuthMiddleware(mockReq, mockRes, mockNext);
+    await authMiddleware(mockReq, mockRes, mockNext);
 
     expect(mockNext).toHaveBeenCalled();
     expect(mockReq.user).toEqual({ id: 1, name: 'test' });
@@ -49,7 +49,7 @@ describe('AuthMiddleware', () => {
       throw new Error('Invalid token');
     });
 
-    await AuthMiddleware(mockReq, mockRes, mockNext);
+    await authMiddleware(mockReq, mockRes, mockNext);
 
     expect(mockNext).toHaveBeenCalledWith(expect.any(Error));
   });

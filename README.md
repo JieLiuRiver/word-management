@@ -37,11 +37,19 @@ npm run start
 npm run test
 ```
 
+### Users
+When starting the app, the users table inserts 2 users by default
+- User `Tom`, administrator identity
+- User `Mary`, normal user
+
 ### API
 All apis are prefixed with `/api/v1`. For example, you want to test login api, it's `/api/v1/login`.
 
 all endpoints except `/login` require an authentication `token`
-- `POST /login` - User login, requires body.username
+
+- `POST /login` - User login, only requires body.username, no need password at this time.
+- `GET /users` - Get users, only admin have this permission
+- `GET /users/:id` - Get users, only admin have this permission
 - `POST /revoke-token` - Revoke JWT for a user, requires admin privileges, required body.userid
 - `POST /cards` - Create a new word card, requires body.- `POST /cards` - Create a new word card, requires body.user_input
 - `GET /cards` - Get paginated word card, defaults to pageNumber: 1, pageSize: 10
