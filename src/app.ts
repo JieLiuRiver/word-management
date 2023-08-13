@@ -8,6 +8,7 @@ import apiResponseMiddleware from '@/middlewares/api.response.middleware';
 import { createRateLimitMiddleware } from './middlewares/ratelimit.middleware';
 import cors from '@/middlewares/cors.middleware';
 import securityHeadersMiddleware from '@/middlewares/security-headers.middleware';
+import { API_PREFIX } from './constants';
 
 export class App {
   public app: express.Application;
@@ -56,7 +57,7 @@ export class App {
 
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
-      this.app.use('/', route.router);
+      this.app.use(API_PREFIX, route.router);
     });
   }
 

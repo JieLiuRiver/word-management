@@ -16,6 +16,11 @@ npm install
 npm run dev
 ```
 
+After that, you will see the terminal display:
+```
+App listening on the port 3000
+```
+
 ### Build
 1. Generate `dist/` outputs
 ```
@@ -33,7 +38,9 @@ npm run test
 ```
 
 ### API
-All endpoints except `/login` require an authentication `token`
+All apis are prefixed with `/api/v1`. For example, you want to test login api, it's `/api/v1/login`.
+
+all endpoints except `/login` require an authentication `token`
 - `POST /login` - User login, requires body.username
 - `POST /revoke-token` - Revoke JWT for a user, requires admin privileges
 - `POST /cards` - Create a new word card, requires body.word

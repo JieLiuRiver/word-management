@@ -5,3 +5,5 @@ export const WITHOUT_ADMIN_PERMISSION_MESSAGE = `${ERROR_MESSAGE_PREFIX}admin pe
 export const SUCCESS_RESPONSE_CODE = 0;
 
 export const ERROR_RESPONSE_CODE = -1;
+
+export const API_PREFIX = '/api/v1';
