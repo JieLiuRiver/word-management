@@ -17,17 +17,17 @@ class UserModel {
   }
 
   /**
-   * update user's psersonalkey, which means invalidate special user's token, only support opera by admin
-   * @param username
+   * update user's psersonalkey
+   * @param userid
    * @returns
    */
-  async updateUserPersonalkey(username: string): Promise<void> {
+  async updateUserPersonalkey(userid: number): Promise<void> {
     const result = await run(
       `
       UPDATE users
-      SET personalKey = ? WHERE name = ?
+      SET personalKey = ? WHERE id = ?
     `,
-      [await genPersonalKey(), username],
+      [await genPersonalKey(), userid],
     );
 
     return result as Promise<void>;

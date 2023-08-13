@@ -30,7 +30,7 @@ const createTables = (db: Database) => {
     db.run(
       `CREATE TABLE IF NOT EXISTS cards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        word TEXT,
+        user_input TEXT,
         createTime DATETIME DEFAULT CURRENT_TIMESTAMP,
         updateTime DATETIME DEFAULT CURRENT_TIMESTAMP
       )`,

@@ -7,7 +7,7 @@ import { validateBodyWordFeild, validatePageParams, validateParamsIdFeild } from
 import createInputValidationMiddleware from '@/middlewares/input-validator.middlware';
 import { queueMiddleware } from '@/middlewares/queue.middleware';
 
-const wordInputValidationMiddleware = createInputValidationMiddleware('word');
+const userInputValidationMiddleware = createInputValidationMiddleware('user_input');
 
 export class CardsRoute implements Routes {
   public path = '/cards';
@@ -25,7 +25,7 @@ export class CardsRoute implements Routes {
       AuthMiddleware,
       AdminApiGuardMiddleware,
       validateBodyWordFeild,
-      wordInputValidationMiddleware,
+      userInputValidationMiddleware,
       // use queue middleware to handle highly concurrent writes
       queueMiddleware(this.cards.createCard.bind(this.cards)),
     );
@@ -43,7 +43,7 @@ export class CardsRoute implements Routes {
       AdminApiGuardMiddleware,
       validateParamsIdFeild,
       validateBodyWordFeild,
-      wordInputValidationMiddleware,
+      userInputValidationMiddleware,
       // use queue middleware to handle highly concurrent writes
       queueMiddleware(this.cards.updateCard.bind(this.cards)),
     );

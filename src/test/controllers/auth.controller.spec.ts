@@ -39,7 +39,7 @@ describe('AuthController', () => {
       const req = { body: { username: 'test' } };
       const res = { apiSuccess: jest.fn() };
 
-      await controller.logIn(req, res);
+      await controller.login(req, res);
 
       expect(res.apiSuccess).toBeCalledWith({
         token: 'token',

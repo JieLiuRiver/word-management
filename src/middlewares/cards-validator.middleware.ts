@@ -15,17 +15,31 @@ export function validateUsername(req: Request, res: Response, next: NextFunction
   if (error) {
     return next(new HttpException(404, error.details[0].message));
   }
-
   next();
 }
 
-const wordSchema = Joi.string()
+const idBodySchema = Joi.number()
   .required()
   .messages({
-    'any.required': withErrorMessagePrefix('word is required'),
+    'any.required': withErrorMessagePrefix('userid is required'),
+  });
+
+export function validateUserid(req: Request, res: Response, next: NextFunction) {
+  const { error } = idBodySchema.validate(req.body.userid);
+
+  if (error) {
+    return next(new HttpException(404, error.details[0].message));
+  }
+  next();
+}
+
+const userInputSchema = Joi.string()
+  .required()
+  .messages({
+    'any.required': withErrorMessagePrefix('user_input is required'),
   });
 export function validateBodyWordFeild(req: Request, res: Response, next: NextFunction) {
-  const { error } = wordSchema.validate(req.body.word);
+  const { error } = userInputSchema.validate(req.body.user_input);
 
   if (error) {
     return next(new HttpException(404, error.details[0].message));
@@ -34,13 +48,13 @@ export function validateBodyWordFeild(req: Request, res: Response, next: NextFun
   next();
 }
 
-const idSchema = Joi.string()
+const idParamSchema = Joi.string()
   .required()
   .messages({
     'any.required': withErrorMessagePrefix('id field is required'),
   });
 export function validateParamsIdFeild(req: Request, res: Response, next: NextFunction) {
-  const { error } = idSchema.validate(req.params.id);
+  const { error } = idParamSchema.validate(req.params.id);
 
   if (error) {
     return next(new HttpException(404, error.details[0].message));
@@ -48,6 +62,7 @@ export function validateParamsIdFeild(req: Request, res: Response, next: NextFun
 
   next();
 }
+
 const pageSchema = Joi.object({
   pageNumber: Joi.number()
     .integer()

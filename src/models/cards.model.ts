@@ -4,11 +4,11 @@ import { query, run, all } from '@/utils/promise.db';
 class CardsModel {
   /**
    * create card
-   * @param word card's word
+   * @param user_input card's user_input
    * @returns Card
    */
-  async createCard(word: string): Promise<Card | null> {
-    const result = await run('INSERT INTO cards (word) VALUES (?)', [word]);
+  async createCard(user_input: string): Promise<Card | null> {
+    const result = await run('INSERT INTO cards (user_input) VALUES (?)', [user_input]);
     if (!result) {
       return null;
     }
@@ -18,16 +18,16 @@ class CardsModel {
   /**
    * update card
    * @param id cardid
-   * @param info info.word string
+   * @param info info.user_input string
    * @returns Card
    */
-  async updateCard(id: number, info: { word: string }): Promise<Card | null> {
+  async updateCard(id: number, info: { user_input: string }): Promise<Card | null> {
     try {
       await run('BEGIN');
       await run(
         `UPDATE cards
-         SET word = ? WHERE id = ?`,
-        [info.word, id],
+         SET user_input = ? WHERE id = ?`,
+        [info.user_input, id],
       );
       const newCard = await this.getCardById(id);
       await run('COMMIT');

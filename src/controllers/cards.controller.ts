@@ -10,8 +10,8 @@ export class CardsController {
 
   public createCard = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
-      const { word } = req.body;
-      const newCard: Card = await this.cardsModel.createCard(word);
+      const { user_input } = req.body;
+      const newCard: Card = await this.cardsModel.createCard(user_input);
       res.apiSuccess(newCard);
     } catch (error) {
       next(error);
@@ -21,12 +21,12 @@ export class CardsController {
   public updateCard = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-      const { word } = req.body;
+      const { user_input } = req.body;
       const card: Card = await this.cardsModel.getCardById(Number(id));
       if (!card) {
         throw new HttpException(409, withErrorMessagePrefix(`card ${id} is not found`));
       }
-      await this.cardsModel.updateCard(Number(id), { word });
+      await this.cardsModel.updateCard(Number(id), { user_input });
       res.apiSuccess(null);
     } catch (error) {
       next(error);

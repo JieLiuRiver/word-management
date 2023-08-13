@@ -11,7 +11,7 @@ export class AuthController {
   private userModel = new UserModel();
 
   // users login
-  public logIn = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
+  public login = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
       const { username } = req.body;
       const foundUser: User = await this.userModel.findUserByName(username);
@@ -26,8 +26,8 @@ export class AuthController {
   // revoke token, only admin can use
   public revokeToken = async (req: RequestWithUser, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
-      const { username } = req.body;
-      await this.userModel.updateUserPersonalkey(username);
+      const { userid } = req.body;
+      await this.userModel.updateUserPersonalkey(userid);
       res.apiSuccess(null);
     } catch (error) {
       next(error);

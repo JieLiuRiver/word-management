@@ -1,6 +1,6 @@
 export interface Card {
   id: number;
-  word: string;
+  user_input: string;
   createTime: string;
   updateTime: string;
   no: string;

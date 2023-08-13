@@ -42,11 +42,11 @@ All apis are prefixed with `/api/v1`. For example, you want to test login api, i
 
 all endpoints except `/login` require an authentication `token`
 - `POST /login` - User login, requires body.username
-- `POST /revoke-token` - Revoke JWT for a user, requires admin privileges
-- `POST /cards` - Create a new word card, requires body.word
+- `POST /revoke-token` - Revoke JWT for a user, requires admin privileges, required body.userid
+- `POST /cards` - Create a new word card, requires body.- `POST /cards` - Create a new word card, requires body.user_input
 - `GET /cards` - Get paginated word card, defaults to pageNumber: 1, pageSize: 10
 - `GET /cards/:id` - Get card by ID
-- `PUT /cards/:id` - Update card by ID, requires params.id and body.word
+- `PUT /cards/:id` - Update card by ID, requires params.id and body.user_input
 - `DELETE /cards/:id` - Delete card by ID
 
 
@@ -79,7 +79,7 @@ If a client exceeds the request limit, a 429 Too Many Requests response is retur
 ### Security and Input Validation
 
 #### Input Validation
-Input validation is implemented using a middleware to protect the input value of word. It filters out special characters and prevents SQL injection.
+Input validation is implemented using a middleware to protect the input value of user_input. It filters out special characters and prevents SQL injection.
 
 #### Security
 For security purposes, a custom `cors` middleware is implemented to configure the secure origin using environment variables.

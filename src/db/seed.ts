@@ -10,7 +10,7 @@ async function seedCards() {
   const count = await query('SELECT COUNT(*) FROM cards');
 
   if (count['COUNT(*)'] === 0) {
-    await run('INSERT INTO cards (word) VALUES (?),(?),(?)', DEFAULT_WORDS);
+    await run('INSERT INTO cards (user_input) VALUES (?),(?),(?)', DEFAULT_WORDS);
   }
 }
 

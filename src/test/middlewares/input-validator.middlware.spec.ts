@@ -1,12 +1,12 @@
 import createInputValidationMiddleware from '@/middlewares/input-validator.middlware';
 
 describe('Input validator middleware', () => {
-  const middleware = createInputValidationMiddleware('word');
+  const middleware = createInputValidationMiddleware('user_input');
 
   it('should allow valid input', () => {
     const req = {
       body: {
-        word: 'John',
+        user_input: 'John',
       },
     };
 
