@@ -11,16 +11,16 @@ jest.mock('@/models/cards.model', () => {
     constructor() {
       this.createCard = jest.fn(() => ({
         id: 1,
-        use_input: 'card01',
+        user_input: 'card01',
       }));
       this.getCardById = jest.fn(() => ({
         id: 1,
-        use_input: 'card01',
+        user_input: 'card01',
       }));
       this.deleteCard = jest.fn(() => null);
       this.updateCard = jest.fn(() => null);
       this.fetchCards = jest.fn(() => ({
-        rows: [{ id: 1, user_inut: 'card01' }],
+        rows: [{ id: 1, user_input: 'card01' }],
         meta: {
           total: 1,
           pageSize: 10,
@@ -42,14 +42,14 @@ describe('CardsController', () => {
 
   describe('create', () => {
     it('should create card successfuly', async () => {
-      const req = { body: { user_inut: 'card01' } };
+      const req = { body: { user_input: 'card01' } };
       const res = { apiSuccess: jest.fn() };
 
       await controller.createCard(req, res, jest.fn());
 
       expect(res.apiSuccess).toBeCalledWith({
         id: 1,
-        user_inut: 'card01',
+        user_input: 'card01',
       });
     });
 
@@ -65,7 +65,7 @@ describe('CardsController', () => {
 
       expect(res.apiSuccess).toBeCalledWith({
         id: 1,
-        user_inut: 'card01',
+        user_input: 'card01',
       });
     });
 

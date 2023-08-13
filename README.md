@@ -43,7 +43,7 @@ When starting the app, the users table inserts 2 users by default
 - User `Mary`, normal user
 
 ### API
-All API are prefixed with `/api/v1`， for example, you want to test login api, it's `/api/v1/login`.
+All API are prefixed with `/api/v1`, for example, you want to test login api, it's `/api/v1/login`.
 
 | API | METHOD | Authorization | PARAMS/BODY | PERMISSION | DESCRIPTION
 | :----- | :------ | :----- | :----- |:----- |:----- |

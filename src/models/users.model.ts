@@ -7,7 +7,7 @@ class UserModel {
    * get users
    * @returns Users[]
    */
-  async getUers(): Promise<User[]> {
+  async getUsers(): Promise<User[]> {
     const datas = await all('SELECT * FROM users');
     return (datas || []) as User[];
   }

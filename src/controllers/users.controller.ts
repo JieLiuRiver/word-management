@@ -10,7 +10,7 @@ export class UsersController {
 
   public getUsers = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
-      const datas = await this.usersModel.getUers();
+      const datas = await this.usersModel.getUsers();
       res.apiSuccess(datas.map(user => omit<User>(user, ['personalKey'])));
     } catch (error) {
       next(error);
