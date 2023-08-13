@@ -1,9 +1,9 @@
-import { query, run, all } from '@/utils/promise.db';
+import { get, run, all } from '@/utils/promise.db';
 import db from '@/db';
 
 jest.mock('@/db', () => {
   return {
-    query: jest.fn(),
+    get: jest.fn(),
     run: jest.fn(),
     all: jest.fn(),
   };
@@ -22,7 +22,7 @@ describe('promise.db', () => {
 
       db.get = mockGet;
 
-      const result = await query('SELECT 1', [1]);
+      const result = await get('SELECT 1', [1]);
 
       expect(mockGet).toBeCalledWith('SELECT 1', [1], expect.any(Function));
       expect(result).toBe('data');

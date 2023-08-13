@@ -18,3 +18,8 @@ export function omit<T>(source: T, props: string[] = []) {
   }
   return result;
 }
+
+export function formatNumber(num: number, width = 4) {
+  const formatted = num.toString().padStart(width, '0');
+  return formatted;
+}

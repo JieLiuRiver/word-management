@@ -7,5 +7,6 @@ export interface User {
   id: number;
   name: string;
   type: EUserType;
+  no: string;
   personalKey: string;
 }

@@ -1,6 +1,6 @@
 import { User } from '@/interfaces/users.interface';
 import { genPersonalKey } from '@/utils';
-import { query, run, all } from '@/utils/promise.db';
+import { get, run, all } from '@/utils/promise.db';
 
 class UserModel {
   /**
@@ -18,7 +18,7 @@ class UserModel {
    * @returns User
    */
   async getUserById(userid: number): Promise<User | null> {
-    const data = await query('SELECT * FROM users WHERE id = ?', [userid]);
+    const data = await get('SELECT * FROM users WHERE id = ?', [userid]);
     if (!data) {
       return null;
     }
@@ -31,7 +31,7 @@ class UserModel {
    * @returns user
    */
   async findUserByName(username: string): Promise<User | null> {
-    const result = await query('SELECT * FROM users WHERE name = ?', [username]);
+    const result = await get('SELECT * FROM users WHERE name = ?', [username]);
     if (!result) {
       return null;
     }

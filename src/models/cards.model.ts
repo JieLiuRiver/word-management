@@ -1,5 +1,6 @@
 import { Card } from '@/interfaces/cards.interface';
-import { query, run, all } from '@/utils/promise.db';
+import { formatNumber } from '@/utils';
+import { get, all, run } from '@/utils/promise.db';
 
 class CardsModel {
   /**
@@ -8,11 +9,30 @@ class CardsModel {
    * @returns Card
    */
   async createCard(user_input: string): Promise<Card | null> {
-    const result = await run('INSERT INTO cards (user_input) VALUES (?)', [user_input]);
-    if (!result) {
-      return null;
+    try {
+      await run('BEGIN');
+      const maxId = await this.getMaxId();
+      const result = await run('INSERT INTO cards (user_input, no) VALUES (?, ?)', [user_input, formatNumber(maxId + 1)]);
+      await run('COMMIT');
+      if (!result) {
+        return null;
+      }
+      return result as Card;
+    } catch (error) {
+      await run('ROLLBACK');
     }
-    return result as Card;
+  }
+
+  private async getMaxId() {
+    let id = 1;
+    try {
+      const row = await get('SELECT MAX(id) as maxId FROM cards');
+      id = row.maxId;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      return id;
+    }
   }
 
   /**
@@ -75,9 +95,7 @@ class CardsModel {
       OFFSET ${offset}
     `);
 
-    const countResponse = await query(`
-      SELECT COUNT(*) AS count FROM cards
-    `);
+    const count = await this.getCount();
     if (!result) {
       return null;
     }
@@ -85,11 +103,18 @@ class CardsModel {
     return {
       rows: result as Card[],
       meta: {
-        total: (countResponse as { count: number }).count,
+        total: count,
         pageNumber,
         pageSize,
       },
     };
+  }
+
+  public async getCount() {
+    const countResponse = await get(`
+      SELECT COUNT(*) AS count FROM cards
+    `);
+    return (countResponse as { count: number }).count;
   }
 
   /**
@@ -98,7 +123,7 @@ class CardsModel {
    * @returns
    */
   async getCardById(id: number): Promise<Card | null> {
-    const result = await query('SELECT * FROM cards WHERE id = ?', [id]);
+    const result = await get('SELECT * FROM cards WHERE id = ?', [id]);
     if (!result) {
       return null;
     }

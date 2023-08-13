@@ -1,21 +1,25 @@
 import { genPersonalKey } from '@/utils';
 import { EUserType } from '@/interfaces/users.interface';
-import { query, run } from '@/utils/promise.db';
+import { get, run } from '@/utils/promise.db';
+import CardModel from '@/models/cards.model';
 
 const DEFAULT_ADMIN_NAME = 'Tom';
 const DEFAULT_USER_NAME = 'Mary';
 const DEFAULT_WORDS = ['Software Engineer', 'NodeJs', 'TypeScript'];
 
 async function seedCards() {
-  const count = await query('SELECT COUNT(*) FROM cards');
+  const card = new CardModel();
+  const count = await card.getCount();
 
-  if (count['COUNT(*)'] === 0) {
-    await run('INSERT INTO cards (user_input) VALUES (?),(?),(?)', DEFAULT_WORDS);
+  if (count === 0) {
+    DEFAULT_WORDS.reduce((calc, cur) => {
+      return calc.then(() => card.createCard(cur));
+    }, Promise.resolve());
   }
 }
 
 export async function seedUsers() {
-  const count = await query('SELECT COUNT(*) FROM users');
+  const count = await get('SELECT COUNT(*) FROM users');
   if (count?.['COUNT(*)'] === 0) {
     await run(
       `
