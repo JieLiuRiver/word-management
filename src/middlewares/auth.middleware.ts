@@ -4,6 +4,8 @@ import { RequestWithUser } from '@/interfaces/auth.interface';
 import UserModel from '@/models/users.model';
 import jwtService from '@/services/jwt.service';
 import { withErrorMessagePrefix } from '@/utils';
+import AuthenticationTokenMissingException from '@/exceptions/AuthenticationTokenMissingException';
+import WrongAuthenticationTokenException from '@/exceptions/WrongAuthenticationTokenException';
 
 const getAuthorization = req => {
   const header = req.header('Authorization');
@@ -26,12 +28,12 @@ export const authMiddleware = async (req: RequestWithUser, res: Response, next: 
         req.user = currentUser;
         next();
       } else {
-        next(new HttpException(401, withErrorMessagePrefix('wrong authentication token')));
+        next(new WrongAuthenticationTokenException());
       }
     } else {
-      next(new HttpException(404, withErrorMessagePrefix('authentication token missing')));
+      next(new AuthenticationTokenMissingException());
     }
   } catch (error) {
-    next(new HttpException(401, withErrorMessagePrefix('wrong authentication token')));
+    next(new WrongAuthenticationTokenException());
   }
 };
