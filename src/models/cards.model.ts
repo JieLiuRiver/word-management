@@ -1,5 +1,6 @@
 import { Card } from '@/interfaces/cards.interface';
 import { formatNumber } from '@/utils';
+import db from '@/db';
 import { get, all, run } from '@/utils/promise.db';
 
 class CardsModel {
@@ -8,19 +9,32 @@ class CardsModel {
    * @param user_input card's user_input
    * @returns Card
    */
-  async createCard(user_input: string): Promise<Card | null> {
+  async createCard(user_input: string): Promise<Partial<Card> | null> {
     try {
       await run('BEGIN');
       const maxId = await this.getMaxId();
-      const result = await run('INSERT INTO cards (user_input, no) VALUES (?, ?)', [user_input, formatNumber(maxId + 1)]);
+      const recordID = await this.insertRecord('INSERT INTO cards (user_input, no) VALUES (?, ?)', [user_input, formatNumber(maxId + 1)]);
       await run('COMMIT');
-      if (!result) {
+      if (!recordID) {
         return null;
       }
-      return result as Card;
+      return {
+        id: recordID as number,
+      };
     } catch (error) {
       await run('ROLLBACK');
     }
+  }
+
+  private insertRecord(sql: string, params: any) {
+    return new Promise((resolve, reject) => {
+      db.run(sql, params, function (error) {
+        if (error) {
+          reject();
+        }
+        resolve(this.lastID);
+      });
+    });
   }
 
   private async getMaxId() {

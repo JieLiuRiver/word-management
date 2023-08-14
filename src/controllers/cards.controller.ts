@@ -11,7 +11,7 @@ export class CardsController {
   public createCard = async (req: Request, res: ApiResponse, next: NextFunction): Promise<void> => {
     try {
       const { user_input } = req.body;
-      const newCard: Card = await this.cardsModel.createCard(user_input);
+      const newCard = await this.cardsModel.createCard(user_input);
       res.apiSuccess(newCard);
     } catch (error) {
       next(error);
