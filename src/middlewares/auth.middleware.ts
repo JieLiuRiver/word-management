@@ -1,11 +1,9 @@
 import { NextFunction, Response } from 'express';
-import { HttpException } from '@/exceptions/httpException';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import UserModel from '@/models/users.model';
 import jwtService from '@/services/jwt.service';
-import { withErrorMessagePrefix } from '@/utils';
-import AuthenticationTokenMissingException from '@/exceptions/AuthenticationTokenMissingException';
-import WrongAuthenticationTokenException from '@/exceptions/WrongAuthenticationTokenException';
+import AuthenticationTokenMissingException from '@/exceptions/authenticationTokenMissingException';
+import WrongAuthenticationTokenException from '@/exceptions/wrongAuthenticationTokenException';
 
 const getAuthorization = req => {
   const header = req.header('Authorization');
