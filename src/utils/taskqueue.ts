@@ -34,7 +34,7 @@ export default class TaskQueue {
       await task();
       this.processNext();
     } catch (error) {
-      console.error('Task failed with error:', error);
+      console.log('Task failed with error:', error);
       if (retryCount < this.maxRetryCount) {
         console.log(`Task will be retried after ${this.retryDelay}ms. Retry count: ${retryCount + 1}`);
         setTimeout(() => this.addTask(task, retryCount + 1), this.retryDelay);

@@ -1,61 +1,30 @@
-import { get, run, all } from '@/utils/promise.db';
-import db from '@/db';
+import { run, get, all } from '@/utils/promise.db';
 
-jest.mock('@/db', () => {
-  return {
-    get: jest.fn(),
-    run: jest.fn(),
-    all: jest.fn(),
-  };
-});
-
-describe('promise.db', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+describe('db', () => {
+  beforeEach(async () => {
+    await run('CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)');
   });
 
-  describe('query', () => {
-    it('should promisify get query', async () => {
-      const mockGet = jest.fn().mockImplementationOnce((sql, params, cb) => {
-        cb(null, 'data');
-      });
-
-      db.get = mockGet;
-
-      const result = await get('SELECT 1', [1]);
-
-      expect(mockGet).toBeCalledWith('SELECT 1', [1], expect.any(Function));
-      expect(result).toBe('data');
-    });
+  afterEach(async () => {
+    await run('DROP TABLE test');
   });
 
-  describe('run', () => {
-    it('should promisify run query', async () => {
-      const mockRun = jest.fn().mockImplementationOnce((sql, params, cb) => {
-        cb(null, 'data');
-      });
+  it('should insert new record', async () => {
+    await run('INSERT INTO test (name) VALUES (?)', 'foo');
 
-      db.run = mockRun;
+    const result = await get('SELECT name FROM test WHERE id = ?', 1);
 
-      const result = await run('INSERT INTO table', [1]);
-
-      expect(mockRun).toHaveBeenCalledWith('INSERT INTO table', [1], expect.any(Function));
-      expect(result).toBe('data');
-    });
+    expect(result.name).toBe('foo');
   });
 
-  describe('all', () => {
-    it('should promisify all query', async () => {
-      const mockAll = jest.fn().mockImplementationOnce((sql, params, cb) => {
-        cb(null, ['row1', 'row2']);
-      });
+  it('should get all records', async () => {
+    await run('INSERT INTO test (name) VALUES (?)', 'foo');
+    await run('INSERT INTO test (name) VALUES (?)', 'bar');
 
-      db.all = mockAll;
+    const result = await all('SELECT * FROM test');
 
-      const result = await all('SELECT * FROM table', [1]);
-
-      expect(mockAll).toHaveBeenCalledWith('SELECT * FROM table', [1], expect.any(Function));
-      expect(result).toEqual(['row1', 'row2']);
-    });
+    expect(result.length).toBe(2);
+    expect(result[0].name).toBe('foo');
+    expect(result[1].name).toBe('bar');
   });
 });
